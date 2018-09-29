@@ -12,7 +12,7 @@ namespace PageScraper.Controllers
     {
         public IActionResult Index()
         {
-            PageBaseData.DownloadPageData("zs1brodnica.edu.pl");
+            PageBaseData.DownloadPageData("http://www.zs1brodnica.edu.pl/");
             return View();
         }
 
