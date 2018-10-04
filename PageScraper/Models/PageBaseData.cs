@@ -9,9 +9,5 @@ namespace PageScraper.Models
     {
         public string url { get; set; }
         public string pageData { get; set; }
-
-        // create atribute for XML
-        // create atribute for JSON
-
     }
 }

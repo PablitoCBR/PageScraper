@@ -5,29 +5,46 @@ using System.Net;
 using System.Threading.Tasks;
 using PageScraper.Interfaces;
 using System.IO;
+using PageScraper.Models;
 
 namespace PageScraper.Services
 {
     public class WebPageHTMLExtractor : IWebPageHTMLExtracor
     {
-        private string _url { get; set; }
-        public string TryGetWebPageHTML(string stringUrl)
+        private PageBaseData _pageBaseData { get; set; }
+
+        public WebPageHTMLExtractor()
         {
-            _url = stringUrl;
-            if (ValidateUrl(_url))
-                return ExtractWebPageHTML(_url);
-            else return String.Empty; // zaimplementować zwrot informacji o błędzie
+            _pageBaseData = new PageBaseData();
+        }
+        public PageBaseData TryGetWebPageHTML(string stringUrl)
+        {
+            _pageBaseData.url = stringUrl;
+            if (ValidateUrl(_pageBaseData.url))
+            {
+                ExtractWebPageHTML(_pageBaseData.url);
+                return _pageBaseData;
+            }         
+            else
+            {
+                Console.WriteLine("Nieprawdiłowy format adresu");
+                _pageBaseData.url = "Nieprawidłowy format adresu!";
+                return _pageBaseData;
+            }
 
         }
         public bool ValidateUrl(string stringUrl)
         {
-            if (Uri.IsWellFormedUriString(stringUrl, UriKind.RelativeOrAbsolute))
+            Uri uriResult;
+            if (Uri.TryCreate(stringUrl, UriKind.Absolute, out uriResult) && 
+                (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps)) 
                 return true;
             else
             {
-                if (Uri.IsWellFormedUriString(TryToRepairUrl(stringUrl), UriKind.RelativeOrAbsolute))
+                if (Uri.TryCreate(TryToRepairUrl(stringUrl), UriKind.Absolute, out uriResult) && 
+                    (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps))
                 {
-                    _url = TryToRepairUrl(stringUrl);
+                    _pageBaseData.url = TryToRepairUrl(stringUrl);
                     return true;
                 }
                 else return false;
@@ -38,24 +55,22 @@ namespace PageScraper.Services
         {
             return "http://" + stringUrl;
         }
-        public string ExtractWebPageHTML(string stringUrl)
+        public void ExtractWebPageHTML(string stringUrl)
         {
             HttpWebRequest request = HttpWebRequest.CreateHttp(stringUrl);
-            string responseBody;
             try
             {
                 using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
                 {
                     using (StreamReader reader = new StreamReader(response.GetResponseStream()))
                     {
-                        responseBody = reader.ReadToEnd();
+                        _pageBaseData.pageData = reader.ReadToEnd();
                     }
                 }
-                return responseBody;
             }
             catch (WebException ex)
             {
-                return HandleException(ex);
+                _pageBaseData.url = HandleException(ex);
             }
         }
 

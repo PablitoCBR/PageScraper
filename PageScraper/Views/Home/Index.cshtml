@@ -1,7 +1,6 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
-
 }
-@using PageScraper.Models;
 
-<p>@PageBaseData.pageDataStr</p>
+<p>@ViewBag.pageBody.url</p>
+<p>@ViewBag.pageBody.pageData</p>
