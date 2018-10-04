@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using PageScraper.Models;
 using PageScraper.Interfaces;
-using PageScraper.Services;
 
 namespace PageScraper.Controllers
 {
