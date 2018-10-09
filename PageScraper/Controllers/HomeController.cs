@@ -8,14 +8,22 @@ namespace PageScraper.Controllers
     public class HomeController : Controller
     {
         private readonly IWebPageHTMLExtracor _webPageHTMLExtracor;
-        public HomeController(IWebPageHTMLExtracor webPageHTMLExtracor)
+        private readonly IHTMLSerializer _HTMLSerializer;
+        public HomeController(IWebPageHTMLExtracor webPageHTMLExtracor, IHTMLSerializer HtmlSerializer)
         {
             _webPageHTMLExtracor = webPageHTMLExtracor;
+            _HTMLSerializer = HtmlSerializer;
         }
         public IActionResult Index()
         {
-            ViewBag.pageBody = _webPageHTMLExtracor.TryGetWebPageHTML("www.zs1brodnica.edu.pl");
             return View();
+        }
+
+        [HttpPost]
+        public IActionResult GetHTMLFromWebPage(string url)
+        {
+            ViewBag.html = _webPageHTMLExtracor.TryGetWebPageHTML(url).pageData;
+            return View("Index");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

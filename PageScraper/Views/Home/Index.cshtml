@@ -2,5 +2,13 @@
     ViewData["Title"] = "Home Page";
 }
 
-<p>@ViewBag.pageBody.url</p>
-<p>@ViewBag.pageBody.pageData</p>
+
+@using (Html.BeginForm("GetHTMLFromWebPage", "Home", FormMethod.Post))
+{
+    @Html.Label("Enter Url: ")
+    @Html.TextBox("url")
+    <input type="submit" id="btnSubmit" name="Submit"/>
+}
+
+@ViewBag.html
+@* @Html.ActionLink("nazwa_akcji","kontroler_obslugujacy_akcje", obiekt_przesylany_do_akcji) *@
