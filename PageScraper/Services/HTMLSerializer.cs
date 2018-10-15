@@ -1,6 +1,8 @@
 ﻿using System;
 using HtmlAgilityPack;
 using PageScraper.Interfaces;
+using System.Collections.Generic;
+using PageScraper.Models;
 
 namespace PageScraper.Services
 {
@@ -8,23 +10,24 @@ namespace PageScraper.Services
     {
         private HtmlDocument _htmlDoc = new HtmlDocument();
 
-        public HtmlDocument ParseStringToHTMLDocument(string pageData)
+        public HtmlDocument ParseStringToHTMLDocument(PageBaseData pageData)
         {
-            _htmlDoc.LoadHtml(pageData);
+            _htmlDoc.LoadHtml(pageData.pageData);
             return _htmlDoc;
         }
-        public string FindAllImgsUrls(HtmlDocument htmlDoc)
+        public List<String> FindAllImgs(HtmlDocument htmlDoc)
         {
-            string urlsString = "";
+            var ImgsList = new List<string>();
             var urls = htmlDoc.DocumentNode
                 .SelectNodes("//img");
             foreach (var node in urls)
             {
-                urlsString += node.Attributes["src"].Value;
+                ImgsList.Add(node.Attributes["src"].Value);
             }
-            return urlsString;
+            return ImgsList;
         }
-        public void RemoveComments(HtmlDocument htmlDoc)
+
+        public List<string> FindAllUrls(HtmlDocument htmlDoc)
         {
             throw new NotImplementedException();
         }

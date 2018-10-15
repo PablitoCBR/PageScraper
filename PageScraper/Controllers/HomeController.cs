@@ -22,7 +22,9 @@ namespace PageScraper.Controllers
         [HttpPost]
         public IActionResult GetHTMLFromWebPage(string url)
         {
-            ViewBag.html = _webPageHTMLExtracor.TryGetWebPageHTML(url).pageData;
+            var PageData = _webPageHTMLExtracor.TryGetWebPageHTML(url);
+            var Serialized = _HTMLSerializer.ParseStringToHTMLDocument(PageData);
+            ViewBag.Imgs = _HTMLSerializer.FindAllImgs(Serialized);
             return View("Index");
         }
 

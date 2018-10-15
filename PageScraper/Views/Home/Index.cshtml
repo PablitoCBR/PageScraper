@@ -7,8 +7,20 @@
 {
     @Html.Label("Enter Url: ")
     @Html.TextBox("url")
-    <input type="submit" id="btnSubmit" name="Submit"/>
+    <input type="submit" id="btnSubmit" name="Submit" />
+}
+@{
+    if (ViewBag.Imgs != null)
+    {
+        foreach (var url in ViewBag.Imgs)
+        {
+            <p>@url</p>
+        }
+    }
+
 }
 
-@ViewBag.html
+
+
+
 @* @Html.ActionLink("nazwa_akcji","kontroler_obslugujacy_akcje", obiekt_przesylany_do_akcji) *@
