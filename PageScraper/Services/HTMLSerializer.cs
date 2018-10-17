@@ -8,7 +8,7 @@ namespace PageScraper.Services
 {
     public class HTMLSerializer : IHTMLSerializer
     {
-        private HtmlDocument _htmlDoc = new HtmlDocument();
+        private readonly HtmlDocument _htmlDoc = new HtmlDocument();
 
         public HtmlDocument ParseStringToHTMLDocument(PageBaseData pageData)
         {
@@ -18,18 +18,29 @@ namespace PageScraper.Services
         public List<String> FindAllImgs(HtmlDocument htmlDoc)
         {
             var ImgsList = new List<string>();
-            var urls = htmlDoc.DocumentNode
+            var imgs = htmlDoc.DocumentNode
                 .SelectNodes("//img");
-            foreach (var node in urls)
+            foreach (var node in imgs)
             {
-                ImgsList.Add(node.Attributes["src"].Value);
+                if (node.Attributes["src"].Value.StartsWith("http"))
+                    ImgsList.Add(node.Attributes["src"].Value);
+                else ImgsList.Add("main_adress/" + node.Attributes["src"].Value);
             }
             return ImgsList;
         }
 
-        public List<string> FindAllUrls(HtmlDocument htmlDoc)
+        public List<String> FindAllUrls(HtmlDocument htmlDoc)
         {
-            throw new NotImplementedException();
+            var UrlsList = new List<string>();
+            var urls = htmlDoc.DocumentNode
+                .SelectNodes("//a");
+            foreach (var node in urls)
+            {
+                if(node.Attributes["href"] != null)
+                    if(node.Attributes["href"].Value.StartsWith("http"))
+                        UrlsList.Add(node.Attributes["href"].Value); //obsługa null do zaimplementowania
+            }
+            return UrlsList;
         }
     }
 }

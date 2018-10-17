@@ -22,10 +22,15 @@ namespace PageScraper.Controllers
         [HttpPost]
         public IActionResult GetHTMLFromWebPage(string url)
         {
-            var PageData = _webPageHTMLExtracor.TryGetWebPageHTML(url);
-            var Serialized = _HTMLSerializer.ParseStringToHTMLDocument(PageData);
-            ViewBag.Imgs = _HTMLSerializer.FindAllImgs(Serialized);
-            return View("Index");
+            if (!string.IsNullOrEmpty(url))
+            {
+                var PageData = _webPageHTMLExtracor.TryGetWebPageHTML(url);
+                var Serialized = _HTMLSerializer.ParseStringToHTMLDocument(PageData);
+                ViewBag.Urls = _HTMLSerializer.FindAllUrls(Serialized);
+                ViewBag.Imgs = _HTMLSerializer.FindAllImgs(Serialized);
+                ViewBag.Adress = url;
+            }
+            return View("Index");   
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
